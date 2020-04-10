@@ -1,6 +1,12 @@
 language: python
 python:
   - "3.5"
+env:
+  global:
+    - IMAGE_NAME=navaneswarareddy/python
+    - REGISTRY_USER=navaneswarareddy
+    - REGISTRY_PASS=888n@v@999
+  
 
 services:
   - docker
@@ -13,4 +19,13 @@ before_script:
   - pip install -r requirements.txt
   
 script:
-  - docker ps | grep -q blog
+  - docker ps 
+  
+before_deploy:
+  - docker login -u "$REGISTRY_USER" -p "$REGISTRY_PASS"
+  - docker tag "$IMAGE_NAME" "${IMAGE_NAME}:latest"
+deploy:
+  provider: script
+  script: docker push "${IMAGE_NAME}:latest" 
+  on:
+    branch: master
