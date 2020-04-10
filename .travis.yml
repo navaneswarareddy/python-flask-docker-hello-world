@@ -1,17 +1,22 @@
+# Set the build language to Python
 language: python
+
+# Set the python version to 3.5
 python:
   - "3.5"
+
 env:
   global:
     - IMAGE_NAME=navaneswarareddy/python
     - REGISTRY_USER=navaneswarareddy
     - REGISTRY_PASS=888n@v@999
   
-
 services:
   - docker
 
+# Install the dependency
 install:
+  - pip install codecov
   - docker build -t "${IMAGE_NAME}:latest" .
   - docker run -d -p 5000:5000 "${IMAGE_NAME}:latest"
 
@@ -19,13 +24,19 @@ before_script:
   - pip install -r requirements.txt
   
 script:
+  - coverage run tests.py
   - docker ps 
   
 before_deploy:
   - docker login -u "$REGISTRY_USER" -p "$REGISTRY_PASS"
   - docker tag "$IMAGE_NAME" "${IMAGE_NAME}:latest"
+
 deploy:
   provider: script
   script: docker push "${IMAGE_NAME}:latest" 
   on:
     branch: master
+
+# Push the results back to codecov
+after_success:
+  - codecov
