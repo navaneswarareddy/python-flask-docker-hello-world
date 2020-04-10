@@ -24,7 +24,7 @@ before_script:
   - pip install -r requirements.txt
   
 script:
-  - coverage run tests.py test
+  - coverage run tests.py 
   - docker ps 
   
 before_deploy:
