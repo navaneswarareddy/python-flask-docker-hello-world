@@ -7,9 +7,8 @@ python:
 
 env:
   global:
-    - IMAGE_NAME=navaneswarareddy/python
+    - IMAGE_NAME=navaneswarareddy/python1
     - REGISTRY_USER=navaneswarareddy
-    - REGISTRY_PASS=888n@v@999
   
 services:
   - docker
