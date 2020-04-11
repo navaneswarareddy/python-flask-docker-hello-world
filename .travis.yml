@@ -39,3 +39,6 @@ deploy:
 # Push the results back to codecov
 after_success:
   - coverage report
+
+notifications:
+  slack: ibm-cloud:4W9kmg48yKJat658NVScjhIy
