@@ -4,12 +4,14 @@ language: python
 # Set the python version to 3.5
 python:
   - "3.5"
-
+  
+#  environment variables
 env:
   global:
-    - IMAGE_NAME=navaneswarareddy/python2
+    - IMAGE_NAME=navaneswarareddy/python
     - REGISTRY_USER=navaneswarareddy
-  
+
+# To use Docker add the docker service
 services:
   - docker
 
@@ -21,7 +23,8 @@ before_script:
   - pip install -r requirements.txt
   - docker build -t "${IMAGE_NAME}:latest" .
   - docker run -d -p 5000:5000 "${IMAGE_NAME}:latest"
-  
+
+# Run the build script
 script:
   - coverage run tests.py 
   - docker ps 
@@ -30,6 +33,7 @@ before_deploy:
   - docker login -u "$REGISTRY_USER" -p "$REGISTRY_PASS"
   - docker tag "$IMAGE_NAME" "${IMAGE_NAME}:latest"
 
+#Adding a deployment script
 deploy:
   provider: script
   script: docker push "${IMAGE_NAME}:latest" 
@@ -38,8 +42,9 @@ deploy:
 
 # Push the results back to codecov
 after_success:
-  - coverage report
+  - coverage report -m
 
+# Configuring slack notifications 
 notifications:
   slack:
     secure: CA+7Xml9J910wcrd4VxLyYAIz7DEp3Er6JRfCkjWCgPguoA9C+8EnZcSGwtXem2prW1pGWzzZxcEpniD1jXC7T1Nq2fXs1EUrhc0QkQMvXyEMUQCJxS5yIQHi30yKfRtRJRxvvPxGcRQ7rUvYSIG3cNsbxTSPrOM2SKjNvpWGH3NfRG47FjZtFZrBpX8NWHcWhVQ61CABI7TkENF2SGMZfC5g+UzfN9+7zb8CcVWBqMeBO47fKfQlMYFjcRuKjDfJ4xvFnH1aq8uZPskYqfKuVfKJL0I8KPoj6EN2+iBejtuTgy45MrhUBk8LuiV4sbReGr1QV16bVqrH3Q118wjQYvGUWyfibgKLfWL25D9TubRDr85gerW6D4JW/kl0BgP7mhUkbiTDHvgk/i6S7fXo8D4IVVt/wqBgtuaok2z9BXesbyVhem2NGjMAvizpw3CGtDOx72Atm3bSb97OM8ACqBDftxy7RLLnNC4IpYapSoVcKCooYr/LgUweXh/psAJ03Uq0rwRZFeESjWTE3PZNVxMlpaIN7XXoQeNdgIv0/bbpDqjAFiJ4oX5iuEOwVuQuugsgER5h/PqcVPe49WzSygf3dfHbzf2ro7xa/cc19e0xMcZj5ChGy430rvcC88EFvsrH9zKnAFrttEATQf/9tHhRWfb2udnLc56ooBzo6k=
